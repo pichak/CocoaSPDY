@@ -57,7 +57,8 @@
 
     CFMutableDictionaryRef sslOption = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     CFDictionarySetValue(sslOption, kCFStreamSSLValidatesCertificateChain, kCFBooleanFalse);
-    [config setProxySettings:@{@"host":@"localhost",@"port":@3128}];
+    NSNumber *port = [[NSNumber alloc] initWithUnsignedShort:3128];
+    [config setProxySettings:@{@"host":@"localhost",@"port":port}];
     [config setEnableProxy:YES];
     [config setTlsSettings:(__bridge NSDictionary *)(sslOption)];
 //    [SPDYURLConnectionProtocol registerOrigin:@"http://localhost:3128"];

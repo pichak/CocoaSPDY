@@ -99,8 +99,8 @@
         _proxySettings = configuration.proxySettings;
         
         if (_isProxied) {
-            connecting = [socket connectToHost:@"localhost"//[_proxySettings valueForKey:@"host"]
-                                        onPort:3120//[_proxySettings valueForKey:@"port"]
+            connecting = [socket connectToHost:[_proxySettings valueForKey:@"host"]
+                                        onPort:[[_proxySettings valueForKey:@"port"] shortValue]
                                    withTimeout:(NSTimeInterval)60.0
                                           error:pError];
         } else {
