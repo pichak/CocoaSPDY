@@ -55,6 +55,7 @@
     SPDYStreamManager *_inactiveStreams;
     NSMutableData *_inputBuffer;
     NSDictionary *_proxySettings;
+    NSDictionary *_tlsSettings;
 
     SPDYStreamId _lastGoodStreamId;
     SPDYStreamId _nextStreamId;
@@ -97,6 +98,7 @@
         bool connecting = false;
         _isProxied = configuration.enableProxy;
         _proxySettings = configuration.proxySettings;
+        _tlsSettings = configuration.tlsSettings;
         
         if (_isProxied) {
             connecting = [socket connectToHost:[_proxySettings valueForKey:@"host"]
@@ -376,10 +378,7 @@
 - (void)establishSecureTunnel
 {
     SPDY_DEBUG(@"establishing secure tunnel");
-    CFMutableDictionaryRef sslOption = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-    CFDictionarySetValue(sslOption, kCFStreamSSLValidatesCertificateChain, kCFBooleanFalse);
-    CFDictionarySetValue(sslOption, kCFStreamSSLAllowsAnyRoot, kCFBooleanTrue);
-    [_socket secureWithTLS:(__bridge NSDictionary *)(sslOption)];
+    [_socket secureWithTLS:_tlsSettings];
 }
 
 #pragma mark SPDYFrameEncoderDelegate
