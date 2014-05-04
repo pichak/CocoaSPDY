@@ -181,13 +181,14 @@
 {
     SPDYStream *stream = [[SPDYStream alloc] initWithProtocol:protocol dataDelegate:self];
 
-    if ( _isProxied && [stream.request.URL.scheme isEqualToString:@"https"] ) {
-        //[_inactiveStreams addStream:stream];
-        SPDYTunnelStream *tunnelStream = [[SPDYTunnelStream alloc] initWithRequest:stream.request withProxySettings:_proxySettings tunnelDelegate:self];
-        [self _startTunnelStream:tunnelStream];
-        return;
-        return;
-    } else if (_activeStreams.localCount >= _remoteMaxConcurrentStreams) {
+//    if ( _isProxied && [stream.request.URL.scheme isEqualToString:@"https"] ) {
+//        //[_inactiveStreams addStream:stream];
+//        SPDYTunnelStream *tunnelStream = [[SPDYTunnelStream alloc] initWithRequest:stream.request withProxySettings:_proxySettings tunnelDelegate:self];
+//        [self _startTunnelStream:tunnelStream];
+//        return;
+//        return;
+//    } else
+    if (_activeStreams.localCount >= _remoteMaxConcurrentStreams) {
         [_inactiveStreams addStream:stream];
         SPDY_INFO(@"max concurrent streams reached, deferring request");
         return;
