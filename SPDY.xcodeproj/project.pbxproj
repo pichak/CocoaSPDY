@@ -111,6 +111,12 @@
 		06FDA21216717DF100137DBD /* SPDYHeaderBlockDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE895BE087AC28BBBC857F9 /* SPDYHeaderBlockDecompressor.m */; };
 		06FDA21616717F1800137DBD /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 06FDA21416717F0500137DBD /* libz.dylib */; };
 		06FDA21716717F5E00137DBD /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2CC14D2161B608C002E37CF /* CFNetwork.framework */; };
+		721B1EB31914F5A100A6ADBF /* SPDYTunnelStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 721B1EB11914F5A100A6ADBF /* SPDYTunnelStream.h */; };
+		721B1EB41914F5A100A6ADBF /* SPDYTunnelStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 721B1EB21914F5A100A6ADBF /* SPDYTunnelStream.m */; };
+		721B1EB51914F5A100A6ADBF /* SPDYTunnelStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 721B1EB21914F5A100A6ADBF /* SPDYTunnelStream.m */; };
+		721B1EB61914F5A100A6ADBF /* SPDYTunnelStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 721B1EB21914F5A100A6ADBF /* SPDYTunnelStream.m */; };
+		721B1EB71914F5A100A6ADBF /* SPDYTunnelStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 721B1EB21914F5A100A6ADBF /* SPDYTunnelStream.m */; };
+		72EFE0061910FEEB002F6126 /* SPDYConnectionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 72EFE0051910FEEB002F6126 /* SPDYConnectionTest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -192,6 +198,9 @@
 		06FDA21416717F0500137DBD /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		4FE891C7065B348CC7EF4BFC /* SPDYHeaderBlockDecompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDYHeaderBlockDecompressor.h; sourceTree = "<group>"; };
 		4FE895BE087AC28BBBC857F9 /* SPDYHeaderBlockDecompressor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDYHeaderBlockDecompressor.m; sourceTree = "<group>"; };
+		721B1EB11914F5A100A6ADBF /* SPDYTunnelStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDYTunnelStream.h; sourceTree = "<group>"; };
+		721B1EB21914F5A100A6ADBF /* SPDYTunnelStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDYTunnelStream.m; sourceTree = "<group>"; };
+		72EFE0051910FEEB002F6126 /* SPDYConnectionTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDYConnectionTest.m; sourceTree = "<group>"; };
 		D2CC14B216179B43002E37CF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2CC14B816179B43002E37CF /* SPDY-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SPDY-Prefix.pch"; sourceTree = "<group>"; };
 		D2CC14C01618CF62002E37CF /* SPDYProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDYProtocol.h; sourceTree = "<group>"; };
@@ -283,6 +292,7 @@
 				0679F3CE186217FC006F122E /* SPDYOriginTest.m */,
 				060C235D17CE9FCE000B4E9C /* SPDYStreamManagerTest.m */,
 				067EBFE617418F350029F16C /* SPDYStreamTest.m */,
+				72EFE0051910FEEB002F6126 /* SPDYConnectionTest.m */,
 				064EFB1A16715C9F002F0AEC /* Supporting Files */,
 			);
 			path = SPDYUnitTests;
@@ -402,6 +412,8 @@
 				061C8E9317C5954400D22083 /* SPDYStreamManager.m */,
 				06E7BF111823B74D004DB65D /* SPDYTLSTrustEvaluator.h */,
 				06290990169E497300E35A82 /* SPDYZLibCommon.h */,
+				721B1EB11914F5A100A6ADBF /* SPDYTunnelStream.h */,
+				721B1EB21914F5A100A6ADBF /* SPDYTunnelStream.m */,
 			);
 			path = SPDY;
 			sourceTree = "<group>";
@@ -419,6 +431,7 @@
 				06E7BF131824371F004DB65D /* SPDYTLSTrustEvaluator.h in Headers */,
 				06811C971714D426000D1677 /* SPDYError.h in Headers */,
 				062EA640175D4CD3003BC1CE /* SPDYCommonLogger.h in Headers */,
+				721B1EB31914F5A100A6ADBF /* SPDYTunnelStream.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -612,9 +625,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				06FDA20616717DF100137DBD /* SPDYSocket.m in Sources */,
+				72EFE0061910FEEB002F6126 /* SPDYConnectionTest.m in Sources */,
 				06FDA20916717DF100137DBD /* SPDYFrame.m in Sources */,
 				06FDA20B16717DF100137DBD /* SPDYFrameDecoder.m in Sources */,
 				0679F3CF186217FC006F122E /* SPDYOriginTest.m in Sources */,
+				721B1EB41914F5A100A6ADBF /* SPDYTunnelStream.m in Sources */,
 				06FDA20D16717DF100137DBD /* SPDYProtocol.m in Sources */,
 				06FDA20F16717DF100137DBD /* SPDYSession.m in Sources */,
 				06FDA21116717DF100137DBD /* SPDYSessionManager.m in Sources */,
@@ -653,6 +668,7 @@
 				062EA643175D4CD3003BC1CE /* SPDYCommonLogger.m in Sources */,
 				061C8E9617C5954400D22083 /* SPDYStreamManager.m in Sources */,
 				06B290CF1861018A00540A03 /* SPDYOrigin.m in Sources */,
+				721B1EB51914F5A100A6ADBF /* SPDYTunnelStream.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -675,6 +691,7 @@
 				062EA644175D4CD3003BC1CE /* SPDYCommonLogger.m in Sources */,
 				061C8E9717C5954400D22083 /* SPDYStreamManager.m in Sources */,
 				06B290D11861018A00540A03 /* SPDYOrigin.m in Sources */,
+				721B1EB71914F5A100A6ADBF /* SPDYTunnelStream.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -719,6 +736,7 @@
 				06A4E50F180F21D500A82D93 /* SPDYCommonLogger.m in Sources */,
 				06A4E510180F21D500A82D93 /* SPDYStreamManager.m in Sources */,
 				06B290D01861018A00540A03 /* SPDYOrigin.m in Sources */,
+				721B1EB61914F5A100A6ADBF /* SPDYTunnelStream.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

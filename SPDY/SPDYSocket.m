@@ -1701,8 +1701,8 @@ static void SPDYSocketCFWriteStreamCallback(CFWriteStreamRef stream, CFStreamEve
 - (void)_tryTLSHandshake
 {
     if ((_flags & kStartingReadTLS) && (_flags & kStartingWriteTLS)) {
-        SPDYSocketTLSOp *tlsOp = (SPDYSocketTLSOp *)_currentReadOp;
-
+        SPDYSocketTLSOp *tlsOp = (SPDYSocketTLSOp *)_currentReadOp;        
+        
         bool didStartOnReadStream = CFReadStreamSetProperty(_readStream, kCFStreamPropertySSLSettings,
             (__bridge CFDictionaryRef)tlsOp->_tlsSettings);
         bool didStartOnWriteStream = CFWriteStreamSetProperty(_writeStream, kCFStreamPropertySSLSettings,

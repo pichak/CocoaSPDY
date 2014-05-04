@@ -24,6 +24,7 @@
 #import "SPDYSettingsStore.h"
 #import "SPDYSocket.h"
 #import "SPDYStream.h"
+#import "SPDYTunnelStream.h"
 #import "SPDYStreamManager.h"
 #import "SPDYTLSTrustEvaluator.h"
 
@@ -53,6 +54,7 @@
     SPDYStreamManager *_activeStreams;
     SPDYStreamManager *_inactiveStreams;
     NSMutableData *_inputBuffer;
+    NSDictionary *_proxySettings;
 
     SPDYStreamId _lastGoodStreamId;
     SPDYStreamId _nextStreamId;
@@ -69,6 +71,7 @@
     bool _receivedGoAwayFrame;
     bool _sentGoAwayFrame;
     bool _cellular;
+    bool _isProxied;
 }
 
 - (id)initWithOrigin:(SPDYOrigin *)origin
@@ -91,10 +94,22 @@
         }
 
         SPDYSocket *socket = [[SPDYSocket alloc] initWithDelegate:self];
-        bool connecting = [socket connectToHost:origin.host
-                                         onPort:origin.port
-                                    withTimeout:(NSTimeInterval)60.0
+        bool connecting = false;
+        _isProxied = configuration.enableProxy;
+        _proxySettings = configuration.proxySettings;
+        
+        if (_isProxied) {
+            connecting = [socket connectToHost:@"localhost"//[_proxySettings valueForKey:@"host"]
+                                        onPort:3120//[_proxySettings valueForKey:@"port"]
+                                   withTimeout:(NSTimeInterval)60.0
                                           error:pError];
+        } else {
+            connecting = [socket connectToHost:origin.host
+                                        onPort:origin.port
+                                   withTimeout:(NSTimeInterval)60.0
+                                         error:pError];
+        }
+        
 
         if (connecting) {
             _socket = socket;
@@ -104,7 +119,7 @@
             // TODO: for accuracy confirm this later from the socket
             _cellular = cellular;
 
-            if ([_origin.scheme isEqualToString:@"https"]) {
+            if (!configuration.enableProxy && [_origin.scheme isEqualToString:@"https"]) {
                 SPDY_DEBUG(@"session using TLS");
                 [_socket secureWithTLS:configuration.tlsSettings];
             }
@@ -164,7 +179,13 @@
 {
     SPDYStream *stream = [[SPDYStream alloc] initWithProtocol:protocol dataDelegate:self];
 
-    if (_activeStreams.localCount >= _remoteMaxConcurrentStreams) {
+    if ( _isProxied && [stream.request.URL.scheme isEqualToString:@"https"] ) {
+        //[_inactiveStreams addStream:stream];
+        SPDYTunnelStream *tunnelStream = [[SPDYTunnelStream alloc] initWithRequest:stream.request withProxySettings:_proxySettings tunnelDelegate:self];
+        [self _startTunnelStream:tunnelStream];
+        return;
+        return;
+    } else if (_activeStreams.localCount >= _remoteMaxConcurrentStreams) {
         [_inactiveStreams addStream:stream];
         SPDY_INFO(@"max concurrent streams reached, deferring request");
         return;
@@ -182,6 +203,17 @@
         [_inactiveStreams removeStreamForProtocol:stream.protocol];
         [self _startStream:stream];
     }
+}
+
+- (void)_startTunnelStream:(SPDYTunnelStream *)stream
+{
+    SPDYStreamId streamId = [self nextStreamId];
+    [stream startWithStreamId:streamId
+               sendWindowSize:_initialSendWindowSize
+            receiveWindowSize:_initialReceiveWindowSize];
+    _activeStreams[streamId] = stream;
+    [self _sendTunnelSynStream:stream streamId:streamId];
+    stream.localSideClosed = YES;
 }
 
 - (void)_startStream:(SPDYStream *)stream
@@ -339,6 +371,15 @@
 {
     SPDY_DEBUG(@"request body stream finished");
     [self _sendData:stream];
+}
+
+- (void)establishSecureTunnel
+{
+    SPDY_DEBUG(@"establishing secure tunnel");
+    CFMutableDictionaryRef sslOption = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    CFDictionarySetValue(sslOption, kCFStreamSSLValidatesCertificateChain, kCFBooleanFalse);
+    CFDictionarySetValue(sslOption, kCFStreamSSLAllowsAnyRoot, kCFBooleanTrue);
+    [_socket secureWithTLS:(__bridge NSDictionary *)(sslOption)];
 }
 
 #pragma mark SPDYFrameEncoderDelegate
@@ -754,6 +795,21 @@
 
     [_frameEncoder encodeSettingsFrame:settingsFrame];
     SPDY_DEBUG(@"sent client SETTINGS");
+}
+
+- (void)_sendTunnelSynStream:(SPDYTunnelStream *)stream streamId:(SPDYStreamId)streamId
+{
+    SPDYSynStreamFrame *synStreamFrame = [[SPDYSynStreamFrame alloc] init];
+    synStreamFrame.streamId = streamId;
+    synStreamFrame.priority = stream.priority;
+    synStreamFrame.unidirectional = NO;
+    synStreamFrame.slot = 0;
+    synStreamFrame.associatedToStreamId = 0;
+    synStreamFrame.last = NO;
+    synStreamFrame.headers = stream.headerFields;
+    
+    [_frameEncoder encodeSynStreamFrame:synStreamFrame];
+    SPDY_DEBUG(@"sent SYN_STREAM.%u%@",streamId, synStreamFrame.last ? @"!" : @"");
 }
 
 - (void)_sendSynStream:(SPDYStream *)stream streamId:(SPDYStreamId)streamId closeLocal:(bool)close

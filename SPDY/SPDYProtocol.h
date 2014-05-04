@@ -144,4 +144,18 @@ extern NSString *const SPDYOriginUnregisteredNotification;
 */
 @property NSDictionary *tlsSettings;
 
+/**
+ Enable or disable using SPDY as a proxy
+ 
+ Default is no settings.
+ */
+@property BOOL enableProxy;
+
+/**
+  Proxy settings for using SPDY as a proxy
+ 
+  Default is no settings (uses https system proxy).
+*/
+@property NSDictionary *proxySettings;
+
 @end

@@ -10,12 +10,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SPDYTunnelStream.h"
 
 @class SPDYProtocol;
 @class SPDYConfiguration;
 @class SPDYOrigin;
 
-@interface SPDYSession : NSObject
+@interface SPDYSession : NSObject <SPDYTunnelStreamDelegate>
 
 @property (nonatomic, readonly) SPDYOrigin *origin;
 @property (nonatomic, readonly) bool isCellular;

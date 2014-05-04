@@ -226,6 +226,8 @@ static SPDYConfiguration *defaultConfiguration;
     defaultConfiguration.streamReceiveWindow = 10485760;
     defaultConfiguration.enableSettingsMinorVersion = NO;
     defaultConfiguration.tlsSettings = @{ /* use Apple default TLS settings */ };
+    defaultConfiguration.proxySettings = @{ /* use Apple default proxy settings */ };
+    defaultConfiguration.enableProxy = NO;
 }
 
 + (SPDYConfiguration *)defaultConfiguration
@@ -241,6 +243,8 @@ static SPDYConfiguration *defaultConfiguration;
     copy.streamReceiveWindow = _streamReceiveWindow;
     copy.enableSettingsMinorVersion = _enableSettingsMinorVersion;
     copy.tlsSettings = _tlsSettings;
+    copy.enableProxy = _enableProxy;
+    copy.proxySettings = _proxySettings;
     return copy;
 }
 
