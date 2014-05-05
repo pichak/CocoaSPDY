@@ -141,15 +141,6 @@ static dispatch_once_t initialized;
 static dispatch_queue_t originQueue;
 static NSMutableSet *origins;
 
-+ (void)load
-{
-    // +[NSURLProtocol registerClass] is not threadsafe, so register before
-    // requests start getting made.
-    @autoreleasepool {
-        [NSURLProtocol registerClass:self];
-    }
-}
-
 + (void)initialize
 {
     dispatch_once(&initialized, ^{
