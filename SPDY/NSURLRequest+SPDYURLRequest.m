@@ -55,7 +55,7 @@
         ];
     });
 
-    NSMutableString *path = [[NSMutableString alloc] initWithString:self.URL.path];
+    NSMutableString *path = [[NSMutableString alloc] initWithString:CFBridgingRelease(CFURLCopyPath((CFURLRef)self.URL))];
     NSString *query = self.URL.query;
     if (query) {
         [path appendFormat:@"?%@", query];
