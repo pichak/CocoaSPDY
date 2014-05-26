@@ -314,10 +314,10 @@
                                                              HTTPVersion:version
                                                             headerFields:allHTTPHeaders];
 
-    NSString *location = allHTTPHeaders[@"location"];
+    NSString *location = [allHTTPHeaders[@"location"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
     if (location != nil) {
-        NSURL *redirectURL = [[NSURL alloc] initWithString:location relativeToURL:requestURL];
+        NSURL *redirectURL = [[NSURL alloc] initWithString:[location stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] relativeToURL:requestURL];
         if (redirectURL == nil) {
             NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain
                                                         code:NSURLErrorRedirectToNonExistentLocation
