@@ -56,15 +56,10 @@
     });
 
     NSMutableString *path = [[NSMutableString alloc] initWithString:CFBridgingRelease(CFURLCopyPath((CFURLRef)self.URL))];
-    NSString *query = self.URL.query;
-    if (query) {
-        [path appendFormat:@"?%@", query];
-    }
+    NSString* afterPath = CFBridgingRelease(CFURLCopyResourceSpecifier((CFURLRef)self.URL));
 
-    NSString *fragment = self.URL.fragment;
-    if (fragment) {
-        [path appendFormat:@"#%@", fragment];
-    }
+    if (afterPath)
+        [path appendString:afterPath];
 
     // Allow manually-set headers to override request properties
     NSMutableDictionary *spdyHeaders = [[NSMutableDictionary alloc] initWithDictionary:@{
